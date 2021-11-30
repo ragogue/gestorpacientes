@@ -3,30 +3,14 @@
 namespace Tests\Feature\Http\Controllers\api;
 
 use App\Http\Controllers\api\AuthController;
+use App\Models\Patient;
+use App\Repositories\PatientRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
 {
-
-    public function setUp(): void
-    {
-        $authController = new AuthController();
-
-        $authController->signup(new Request([
-            'name' => 'test',
-            'email' => 'test@gmail.com',
-            'password' => 'test',
-            'confirm_password' => 'test'
-        ]));
-
-    }
-
-    public function tearDown(): void
-    {
-
-    }
-
     public function testSignin()
     {
         $authController = new AuthController();

@@ -21,9 +21,9 @@ class PatientRepository
         return $patient->save();
     }
 
-    public function deleteByID(string $nif)
+    public function deleteByID(string $id)
     {
-        return Patient::where('id', $nif)->delete();
+        return Patient::where('id', $id)->delete();
     }
 
     public function getByNIF(string $nif)
