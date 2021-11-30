@@ -26,7 +26,7 @@ class DiagnosisController extends Controller
      */
     public function show(Request $request)
     {
-        $diagnosis = Diagnosis::where('patient_id', $request->patient_id)->get();
+        $diagnosis = Diagnosis::where('patient_id', $request->id)->get();
         return $diagnosis;
     }
 }

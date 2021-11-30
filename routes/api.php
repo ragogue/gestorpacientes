@@ -29,8 +29,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/patient/store', 'App\Http\Controllers\PatientController@store'); //save a patient
     Route::post('/patient/update/{id}', 'App\Http\Controllers\PatientController@update'); //update a patient
     Route::delete('/patient/delete/{nif}', 'App\Http\Controllers\PatientController@destroy'); //delete a patient
+    Route::post('/diagnosis/store', 'App\Http\Controllers\DiagnosisController@store'); //save a diagnosis
+    Route::get('/diagnosis/patient/{id}', 'App\Http\Controllers\DiagnosisController@show'); //show all patients
 });
 
-
-Route::post('/diagnosis/store', 'App\Http\Controllers\DiagnosisController@store'); //save a diagnosis
-Route::get('/diagnosis/patient/{id}', 'App\Http\Controllers\DiagnosisController@show'); //show all patients
