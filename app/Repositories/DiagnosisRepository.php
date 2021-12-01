@@ -4,10 +4,11 @@ namespace App\Repositories;
 
 use App\Models\Diagnosis;
 use Facade\FlareClient\Http\Exceptions\NotFound;
+use Illuminate\Database\Eloquent\Collection;
 
 class DiagnosisRepository
 {
-    public function getDiagnosis(int $id) : Diagnosis
+    public function getDiagnosis(int $id) : Collection
     {
          $result = Diagnosis::where('patient_id', $id)->get();
 
