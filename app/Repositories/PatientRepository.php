@@ -3,31 +3,52 @@
 namespace App\Repositories;
 
 use App\Models\Patient;
+use Facade\FlareClient\Http\Exceptions\NotFound;
 
 class PatientRepository
 {
     public function getAllPatients()
     {
-        return Patient::all();
+        $result = Patient::all();
+        if (is_null($result)){
+            throw new NotFound('Patients not found:');
+        }
+        return $result;
     }
 
     public function getByID(int $id)
     {
-        return Patient::find($id);
+        $result = Patient::find($id);
+        if (is_null($result)){
+            throw new NotFound('Patient with id:'. $id . ' not found');
+        }
+        return $result;
     }
 
     public function save(Patient $patient)
     {
-        return $patient->save();
+        $result = $patient->save();
+        if ($result === 0){
+            throw new NotFound('Patient not saved');
+        }
+        return $result;
     }
 
-    public function deleteByID(string $id)
+    public function deleteByID(int $id)
     {
-        return Patient::where('id', $id)->delete();
+        $result = Patient::where('id', $id)->delete();
+        if ($result === 0){
+            throw new NotFound('Patient not deleted');
+        }
+        return $result;
     }
 
     public function getByNIF(string $nif)
     {
-        return Patient::where('nif', $nif)->get();
+        $result = Patient::where('nif', $nif)->get();
+        if (is_null($result)){
+            throw new NotFound('Patient not found');
+        }
+        return $result;
     }
 }

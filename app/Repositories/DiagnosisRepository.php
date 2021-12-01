@@ -3,17 +3,28 @@
 namespace App\Repositories;
 
 use App\Models\Diagnosis;
+use Facade\FlareClient\Http\Exceptions\NotFound;
 
 class DiagnosisRepository
 {
-    public function getDiagnosis(int $id)
+    public function getDiagnosis(int $id) : Diagnosis
     {
-        return Diagnosis::where('patient_id', $id)->get();
+         $result = Diagnosis::where('patient_id', $id)->get();
+
+         if (is_null($result)){
+             throw new NotFound('Diagnosis for patient_id: ' . $id);
+         }
+         return $result;
     }
 
-    public function saveDiagnosis(Diagnosis $diagnosis)
+    public function saveDiagnosis(Diagnosis $diagnosis) : bool
     {
-        return $diagnosis->save();
+        $result =  $diagnosis->save();
+
+         if ($result === 0){
+             throw new NotFound('Diagnosis not saved');
+         }
+         return $result;
     }
 
 

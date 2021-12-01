@@ -5,52 +5,68 @@ namespace App\Http\Controllers;
 use App\Models\Diagnosis;
 use App\Repositories\DiagnosisRepository;
 use App\Repositories\PatientRepository;
+use ErrorException;
+use Exception;
+use Facade\FlareClient\Http\Exceptions\NotFound;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use TypeError;
 use function PHPUnit\Framework\isEmpty;
 
 class DiagnosisController extends Controller
 {
-    /**
-     * Create a new diagnosis
-     * @param \Illuminate\Http\Request
-     */
-    public function store(DiagnosisRepository $diagnosisRepository, PatientRepository $patientRepository, Request $request)
+    public function store(DiagnosisRepository $diagnosisRepository, Request $request) : JsonResponse
     {
         $diagnosis = new Diagnosis();
         $diagnosis->description = $request->description;
         $diagnosis->patient_id = $request->patient_id;
 
-        $result = $diagnosisRepository->saveDiagnosis($diagnosis);
-
-        if ($result){
+        try{
+            $diagnosisRepository->saveDiagnosis($diagnosis);
             return JsonResponse::create(['success' => 1]);
-        } else {
-            return JsonResponse::create(['success' => 0], 404);
+        } catch (NotFound $notFoundException){
+            return JsonResponse::create([
+                'success' => 0,
+                'error' => $notFoundException->getMessage()
+            ], Response::HTTP_NOT_FOUND);
+        } catch (InvalidArgumentException | ErrorException | TypeError $invalidArgument){
+            return JsonResponse::create([
+                'success' => 0,
+                'error' => 'Invalid Argument Exception'
+            ], Response::HTTP_BAD_REQUEST);
+        } catch (Exception $exception){
+            return JsonResponse::create([
+                'success' => 0,
+                'error' => 'A error has been produced.'
+            ], Response::HTTP_BAD_REQUEST);
         }
     }
 
-    /**
-     * Show all patient`s diagnosis
-     * @param \Illuminate\Http\Request
-     */
-    public function show(DiagnosisRepository $diagnosisRepository, Request $request)
+    public function show(DiagnosisRepository $diagnosisRepository, Request $request) : JsonResponse
     {
-       $result = $diagnosisRepository->getDiagnosis($request->id);
-       $resultArray = $result->toArray();
-
-       if (!empty($resultArray)){
-           return JsonResponse::create([
-               'success' => 1,
-               'data' => $result->toArray()
-        ]);
-       } else{
-           return JsonResponse::create([
-               'success' => 0,
-               'data' => []
-        ]);
-       }
-
+        try {
+            $result = $diagnosisRepository->getDiagnosis($request->id);
+            return JsonResponse::create([
+                'success' => 1,
+                'data' => $result->toArray()
+            ]);
+        } catch (NotFound $notFoundException){
+            return JsonResponse::create([
+                'success' => 0,
+                'error' => $notFoundException->getMessage()
+            ], Response::HTTP_BAD_REQUEST);
+        } catch (InvalidArgumentException | ErrorException | TypeError $invalidArgument){
+            return JsonResponse::create([
+                'success' => 0,
+                'error' => 'Invalid Argument Exception'
+            ], Response::HTTP_BAD_REQUEST);
+        } catch (Exception $exception){
+            return JsonResponse::create([
+                'success' => 0,
+                'error' => 'A error has been produced.'
+            ], Response::HTTP_BAD_REQUEST);
+        }
     }
 }
