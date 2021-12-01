@@ -51,6 +51,9 @@ paths:
     get:
       summary: Endpoint for show a patient
       description: Return a Json with success status when try store a patient and patient data
+      parameters:
+        - in: path
+          name: patientID
       responses:
         '200': # status code
           description: A JSON with status operation and data
@@ -85,11 +88,6 @@ paths:
                     type: integer
                   data:
                     type: array
-                    items:
-
-
-
-
 
   /patient/store:
     post:
@@ -109,6 +107,9 @@ paths:
     post:
       summary: Endpoint for update a patient.
       description: Return a Json with success status when try update a patient
+      parameters:
+        - in: path
+          name: patientID
       responses:
         '200': # status code
           description: A JSON with status operation
@@ -133,6 +134,9 @@ paths:
     delete:
       summary: Endpoint for delete a patient .
       description: Return a Json with success status when try delete a patient
+      parameters:
+        - in: path
+          name: patientID
       responses:
         '200': # status code
           description: A JSON with status operation
